@@ -14,4 +14,5 @@ focused on exploring 4 research questions that were identified in milestone 1, u
 # milestone 3 # 
 the final step of the mini data analysis project 
 
-- the **output folder** contains saved files from milestones 2 and 3
+# output folder #
+contains saved files from milestones 2 and 3
