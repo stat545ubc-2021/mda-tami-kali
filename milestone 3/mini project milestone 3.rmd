@@ -97,8 +97,33 @@ Now, choose two of the following tasks.
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: FILL_THIS_IN
+**Task Number**:2.Produce a new plot that groups some factor levels together into an "other" category using the 'forcats' package 
+```{r}
+#reorder the previously low and average values, will create this from the original data set 
+symmetry_cancer_cat_fct <- cancer_sample %>% 
+  mutate(symmetry_cat_fct = factor(case_when(symmetry_mean < 0.16 ~ "low", 
+                                  TRUE ~ "other")))
 
+head(symmetry_cancer_cat_fct)
+
+#plot 
+area_symmetry_plot <- ggplot(symmetry_cancer_cat_fct, aes(area_mean, radius_mean))+ 
+  geom_point(aes(colour = symmetry_cat_fct), size = 3, alpha = 0.4) +
+  ggtitle("High Symmetry of Area vs Radius of Maligant Tumors") +
+  scale_x_continuous(
+    name = "Mean Tumor Area"
+  )+
+  scale_y_continuous(
+    name = "Mean Tumor Radius "
+  ) +
+  labs(color = "Level of Symmetry")
+print(area_symmetry_plot)
+
+
+```
+Why you chose this grouping: This was the only categorical value plot that I had, so I addressed this set of data, looking at symmetry. 
+
+justification for the grouping, which could be subtle or speculative: Looking at the previous graph, differentiating between the average and low values did not provide any additional information, so i wanted to 
 
 
 <!----------------------------------------------------------------------------->
@@ -106,9 +131,15 @@ Now, choose two of the following tasks.
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Task Number**: FILL_THIS_IN
+**Task Number**: 1. Produce a new plot that reorders a factor in your original plot, using the `forcats` package
 
+```{r}
+#I need to recreate another set of categorical values, because currently I only have either 2 or 3 categorical values, where it will not make sense to reorder any factors. This will be the set up stage for this step 
 
+```
+
+why you chose this ordering:
+justification for the reordering, which could be subtle or speculative.
 
 <!----------------------------------------------------------------------------->
 
@@ -122,9 +153,9 @@ Pick a research question, and pick a variable of interest (we'll call it "Y") th
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: FILL_THIS_IN
+**Research Question**: Looking at the "worst_" factors - how are these different in the diagnosis of the tumor compared to the "mean_" values?
 
-**Variable of interest**: FILL_THIS_IN
+**Variable of interest**: area_worst, radius_worst, area_mean, radius_mean, filtered for malignant diagnoses 
 
 <!----------------------------------------------------------------------------->
 
