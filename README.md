@@ -4,6 +4,8 @@
 - focus is on the *cancer_data* set 
 
 - includes 3 folders, which organize all three milestones for the project (milestone 1, 2, 3), which contain the  the .rmd file, and .md file (accompanied by  .png files: graphs produced by the code) 
+- to interact with the project, simply open the .md file, graphs should be rendered 
+- 
 # milestone 1 # 
 focused on identifying the data set to analyse - during this exploratory process, I decided to focus on the *cancer_data* set 
 # milestone 2 # 
