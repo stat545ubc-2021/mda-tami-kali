@@ -39,8 +39,8 @@ library(tidyverse)
 From Milestone 2, you chose two research questions. What were they? Put them here.
 
 <!-------------------------- Start your work below ---------------------------->
-1. *FILL_THIS_IN*
-2. *FILL_THIS_IN*
+1. Which "mean_" features are the driving factor for the diagnosis?
+2. Looking at the "worst_" factors - how are these different in the diagnosis of the tumor compared to the "mean_" values?
 <!----------------------------------------------------------------------------->
 
 
@@ -51,7 +51,31 @@ For this exercise, you'll be choosing two of the three tasks below -- both tasks
 But first, tasks 1 and 2 below ask you to modify a plot you made in a previous milestone. The plot you choose should involve plotting across at least three groups (whether by facetting, or using an aesthetic like colour). Place this plot below (you're allowed to modify the plot if you'd like). If you don't have such a plot, you'll need to make one. Place the code for your plot below.
 
 <!-------------------------- Start your work below ---------------------------->
+I will be using one of my plots where I broke up a numerical value into categories, where each group is a different colour
+```{r}
+#change numerical symmetry variable into a categorical 
+symmetry_cancer_cat <- cancer_sample %>% 
+  mutate(symmetry_cat = case_when(symmetry_mean < 0.16 ~ "low", 
+                                  symmetry_mean > 0.21 ~ "high", 
+                                  TRUE ~ "average"))
 
+head(symmetry_cancer_cat)
+
+#plot 
+area_symmetry_plot <- ggplot(symmetry_cancer_cat, aes(area_mean, radius_mean))+ 
+  geom_point(aes(colour = symmetry_cat), size = 8, alpha = 0.7) +
+  ggtitle("Symmetry of Area vs Radius of Maligant Tumors") +
+  scale_x_continuous(
+    name = "Mean Tumor Area"
+  )+
+  scale_y_continuous(
+    name = "Mean Tumor Radius "
+  ) +
+  labs(color = "Level of Symmetry")
+print(area_symmetry_plot)
+
+
+```
 
 
 <!----------------------------------------------------------------------------->
