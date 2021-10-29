@@ -99,7 +99,7 @@ Now, choose two of the following tasks.
 
 **Task Number**:2.Produce a new plot that groups some factor levels together into an "other" category using the 'forcats' package 
 ```{r}
-#reorder the previously low and average values, will create this from the original data set 
+#reorder the previously high and average values, will create this from the original data set 
 symmetry_cancer_cat_fct <- cancer_sample %>% 
   mutate(symmetry_cat_fct = factor(case_when(symmetry_mean < 0.16 ~ "low", 
                                   TRUE ~ "other")))
@@ -109,7 +109,7 @@ head(symmetry_cancer_cat_fct)
 #plot 
 area_symmetry_plot <- ggplot(symmetry_cancer_cat_fct, aes(area_mean, radius_mean))+ 
   geom_point(aes(colour = symmetry_cat_fct), size = 3, alpha = 0.4) +
-  ggtitle("High Symmetry of Area vs Radius of Maligant Tumors") +
+  ggtitle("Low Symmetry of Area vs Radius of Maligant Tumors") +
   scale_x_continuous(
     name = "Mean Tumor Area"
   )+
@@ -121,9 +121,10 @@ print(area_symmetry_plot)
 
 
 ```
-Why you chose this grouping: This was the only categorical value plot that I had, so I addressed this set of data, looking at symmetry. 
 
-justification for the grouping, which could be subtle or speculative: Looking at the previous graph, differentiating between the average and low values did not provide any additional information, so i wanted to 
+Why you chose this grouping: This was the only categorical value plot that I had, so I addressed this set of data, looking at symmetry. Grouping the symmetry values seemed like a logical next step, because looking only at 3 values did not yield any substansive conclusions
+
+Justification for the grouping, which could be subtle or speculative: Looking at the previous graph, differentiating between the average and high values did not provide any additional information, so I wanted to see if specifically the low values could provide some interesting outcomes - i.e. if there was a grouping of one low symmetry tumors when graphing the radius and area together. This graph did not provide any significant results.
 
 
 <!----------------------------------------------------------------------------->
@@ -134,12 +135,76 @@ justification for the grouping, which could be subtle or speculative: Looking at
 **Task Number**: 1. Produce a new plot that reorders a factor in your original plot, using the `forcats` package
 
 ```{r}
-#I need to recreate another set of categorical values, because currently I only have either 2 or 3 categorical values, where it will not make sense to reorder any factors. This will be the set up stage for this step 
+#I need to recreate another set of categorical values, because currently I only have either 2 or 3 categorical values, where it will not make sense to reorder any factors. This will be the set up stage for this step, I'll look at the radius mean distribution first 
+
+malignant <- cancer_sample %>% 
+  filter(diagnosis == "M")
+benign <- cancer_sample %>% 
+  filter(diagnosis == "B")
+
+combined_data <- dplyr::bind_rows(list(malignant=malignant,benign=benign), .id="Diagnosis")
+head(combined_data)
+  
+
+radius_histo <- ggplot(combined_data,aes(symmetry_mean,fill=Diagnosis))+
+  scale_fill_manual(values=c("red","blue"))+
+  geom_histogram(alpha=0.3,binwidth=0.009,position="identity")+
+    scale_x_continuous(
+    name = "Mean Tumor Symmetry"
+  )+
+  scale_y_continuous(
+    name = NULL
+  ) +
+  labs(color = "Diagnosis")+
+  ggtitle("Distribution of Mean Symmetry for Benign and Malignant Tumor ")
+
+
+print(radius_histo)
 
 ```
+```{r}
+#Now I will create new categorical factors for the symmetry data 
 
-why you chose this ordering:
-justification for the reordering, which could be subtle or speculative.
+symmetry_cancer_fct <- cancer_sample %>% 
+  mutate(symmetry_fct = factor(case_when(symmetry_mean < 0.13 ~ "very low",
+                                         symmetry_mean < 0.15 ~ "low", 
+                                         symmetry_mean < 0.17 ~ "average", 
+                                         symmetry_mean < 0.2 ~ "above average", 
+                                         symmetry_mean < 0.23 ~ "high",
+                                         
+                                  TRUE ~ "very high")))
+
+head(symmetry_cancer_fct)
+
+#plot 
+area_symmetry_plot_2 <- ggplot(symmetry_cancer_fct, aes(symmetry_fct, area_mean))+ 
+  geom_col(aes(fill = diagnosis), size = 3, alpha = 0.4) +
+  ggtitle("Symmetry of Area of Maligant and Benign Tumors") +
+  labs(x = "Mean Tumor Symmetry", y = "Mean Tumor Area")
+  
+print(area_symmetry_plot_2)
+
+
+```
+The Graph above does not have the mean symmetry in order, but alphabetical, which is not logical in observing this data set, so I will reorder using the forcats package - this will be ordered according to ascending worst  area, because I wanted to try and relate this to my research question  
+```{r}
+reorder_cancer_symmetry <- symmetry_cancer_fct %>%
+   mutate(symmetry_fct = fct_reorder(symmetry_fct, area_worst, mean, .desc = FALSE))
+
+head(reorder_cancer_symmetry)
+
+#plot 
+area_symmetry_plot_3 <- ggplot(reorder_cancer_symmetry, aes(symmetry_fct, area_mean))+ 
+  geom_col(aes(fill = diagnosis), size = 3, alpha = 0.4) +
+  ggtitle("Symmetry of Area of Maligant and Benign Tumors") +
+  labs(x = "Mean Tumor Symmetry", y = "Mean Tumor Area")
+  
+print(area_symmetry_plot_3)
+```
+
+
+why you chose this ordering: I wanted to stick to the categorical values that I explored earlier, I did not want to deviate too far from the graph I defined at the start of the exercise, so I decided to finish off with looking at symmetry. I picked these specific values for ordering purely for exploratory reasons 
+justification for the reordering, which could be subtle or speculative: The ordering that I had to begin with was not helpful in looking at the data visually, I also wanted to try and relate this exercise to one of my research questions regarding the "worst_" factors, which I did here
 
 <!----------------------------------------------------------------------------->
 
@@ -170,6 +235,24 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
+```{r}
+#I will see the statistical significance between two means: for the area_worst variable. I will compare the malignant vs benign tumor group 
+
+worst_area_malignant <- cancer_sample %>% 
+  filter(diagnosis == "M") %>%
+  select(area_worst) 
+worst_area_benign <- cancer_sample %>% 
+  filter(diagnosis == "B") %>%
+  select(area_worst) 
+
+
+print(worst_area_malignant)
+print(worst_area_benign)
+
+ttest_worst_area <- t.test(worst_area_malignant, worst_area_benign, alternative = "two.sided", conf.level = 0.95)
+
+print(ttest_worst_area)
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -183,6 +266,15 @@ Produce something relevant from your fitted model: either predictions on Y, or a
   
 <!-------------------------- Start your work below ---------------------------->
 
+When running a t-test, I will need to report the p value if I aim to present this somewhere. For that, I want to tidy the summary statistics from the ttest into something tidy, I will use the broom::tidy() function. This will produce a tibble, from which I will find the p.value column 
+```{r}
+answ2.2 <- broom::tidy(ttest_worst_area)
+print(answ2.2)
+
+#the p value can be called for like so 
+answ2.2$p.value
+
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -201,6 +293,15 @@ Take a summary table that you made from Milestone 2 (Exercise 1.2), and write it
   
 <!-------------------------- Start your work below ---------------------------->
 
+```{r}
+here::here()
+#"C:/Users/tamil/Desktop/STAT545/mda-tami-kali"
+
+write_csv(diagnosis_count, here::here("output", "milestone2_exercise_summary_table.csv"))
+# View files in output folder
+dir(here::here("output"))
+
+```
 
 <!----------------------------------------------------------------------------->
 
@@ -212,6 +313,10 @@ Write your model object from Exercise 2 to an R binary file (an RDS), and load i
 
 <!-------------------------- Start your work below ---------------------------->
 
+```{r}
+saveRDS(ttest_worst_area, here::here("output", "milestone3_model_object.rds"))
+dir(here::here("output"))
+```
 
 <!----------------------------------------------------------------------------->
 
