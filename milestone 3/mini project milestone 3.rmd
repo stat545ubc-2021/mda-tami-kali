@@ -1,6 +1,8 @@
 ---
 title: "Mini Data-Analysis Deliverable 3"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 
