@@ -33,7 +33,8 @@ In this (3rd) milestone, you'll be sharpening some of the results you obtained f
 
 Begin by loading your data and the tidyverse package below: 
 
-```{r, message = FALSE}
+
+```r
 library(datateachr)
 library(tidyverse)
 ```
@@ -54,7 +55,8 @@ But first, tasks 1 and 2 below ask you to modify a plot you made in a previous m
 
 <!-------------------------- Start your work below ---------------------------->
 I will be using one of my plots where I broke up a numerical value into categories, where each group is a different colour
-```{r}
+
+```r
 #change numerical symmetry variable into a categorical 
 symmetry_cancer_cat <- cancer_sample %>% 
   mutate(symmetry_cat = case_when(symmetry_mean < 0.16 ~ "low", 
@@ -62,7 +64,28 @@ symmetry_cancer_cat <- cancer_sample %>%
                                   TRUE ~ "average"))
 
 head(symmetry_cancer_cat)
+```
 
+```
+## # A tibble: 6 x 33
+##         ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+##      <dbl> <chr>           <dbl>        <dbl>          <dbl>     <dbl>
+## 1   842302 M                18.0         10.4          123.      1001 
+## 2   842517 M                20.6         17.8          133.      1326 
+## 3 84300903 M                19.7         21.2          130       1203 
+## 4 84348301 M                11.4         20.4           77.6      386.
+## 5 84358402 M                20.3         14.3          135.      1297 
+## 6   843786 M                12.4         15.7           82.6      477.
+## # ... with 27 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, ...
+```
+
+```r
 #plot 
 area_symmetry_plot <- ggplot(symmetry_cancer_cat, aes(area_mean, radius_mean))+ 
   geom_point(aes(colour = symmetry_cat), size = 8, alpha = 0.7) +
@@ -75,9 +98,9 @@ area_symmetry_plot <- ggplot(symmetry_cancer_cat, aes(area_mean, radius_mean))+
   ) +
   labs(color = "Level of Symmetry")
 print(area_symmetry_plot)
-
-
 ```
+
+![](mini-project-milestone-3_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 
 <!----------------------------------------------------------------------------->
@@ -100,14 +123,36 @@ Now, choose two of the following tasks.
 <!-------------------------- Start your work below ---------------------------->
 
 **Task Number**:2.Produce a new plot that groups some factor levels together into an "other" category using the 'forcats' package 
-```{r}
+
+```r
 #reorder the previously high and average values, will create this from the original data set 
 symmetry_cancer_cat_fct <- cancer_sample %>% 
   mutate(symmetry_cat_fct = factor(case_when(symmetry_mean < 0.16 ~ "low", 
                                   TRUE ~ "other")))
 
 head(symmetry_cancer_cat_fct)
+```
 
+```
+## # A tibble: 6 x 33
+##         ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+##      <dbl> <chr>           <dbl>        <dbl>          <dbl>     <dbl>
+## 1   842302 M                18.0         10.4          123.      1001 
+## 2   842517 M                20.6         17.8          133.      1326 
+## 3 84300903 M                19.7         21.2          130       1203 
+## 4 84348301 M                11.4         20.4           77.6      386.
+## 5 84358402 M                20.3         14.3          135.      1297 
+## 6   843786 M                12.4         15.7           82.6      477.
+## # ... with 27 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, ...
+```
+
+```r
 #plot 
 area_symmetry_plot <- ggplot(symmetry_cancer_cat_fct, aes(area_mean, radius_mean))+ 
   geom_point(aes(colour = symmetry_cat_fct), size = 3, alpha = 0.4) +
@@ -120,9 +165,9 @@ area_symmetry_plot <- ggplot(symmetry_cancer_cat_fct, aes(area_mean, radius_mean
   ) +
   labs(color = "Level of Symmetry")
 print(area_symmetry_plot)
-
-
 ```
+
+![](mini-project-milestone-3_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 Why you chose this grouping: This was the only categorical value plot that I had, so I addressed this set of data, looking at symmetry. Grouping the symmetry values seemed like a logical next step, because looking only at 3 values did not yield any substansive conclusions
 
@@ -136,7 +181,8 @@ Justification for the grouping, which could be subtle or speculative: Looking at
 
 **Task Number**: 1. Produce a new plot that reorders a factor in your original plot, using the `forcats` package
 
-```{r}
+
+```r
 #I need to recreate another set of categorical values, because currently I only have either 2 or 3 categorical values, where it will not make sense to reorder any factors. This will be the set up stage for this step, I'll look at the radius mean distribution first 
 
 malignant <- cancer_sample %>% 
@@ -146,8 +192,28 @@ benign <- cancer_sample %>%
 
 combined_data <- dplyr::bind_rows(list(malignant=malignant,benign=benign), .id="Diagnosis")
 head(combined_data)
-  
+```
 
+```
+## # A tibble: 6 x 33
+##   Diagnosis       ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+##   <chr>        <dbl> <chr>           <dbl>        <dbl>          <dbl>     <dbl>
+## 1 malignant   842302 M                18.0         10.4          123.      1001 
+## 2 malignant   842517 M                20.6         17.8          133.      1326 
+## 3 malignant 84300903 M                19.7         21.2          130       1203 
+## 4 malignant 84348301 M                11.4         20.4           77.6      386.
+## 5 malignant 84358402 M                20.3         14.3          135.      1297 
+## 6 malignant   843786 M                12.4         15.7           82.6      477.
+## # ... with 26 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, ...
+```
+
+```r
 radius_histo <- ggplot(combined_data,aes(symmetry_mean,fill=Diagnosis))+
   scale_fill_manual(values=c("red","blue"))+
   geom_histogram(alpha=0.3,binwidth=0.009,position="identity")+
@@ -162,9 +228,11 @@ radius_histo <- ggplot(combined_data,aes(symmetry_mean,fill=Diagnosis))+
 
 
 print(radius_histo)
-
 ```
-```{r}
+
+![](mini-project-milestone-3_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
 #Now I will create new categorical factors for the symmetry data 
 
 symmetry_cancer_fct <- cancer_sample %>% 
@@ -177,7 +245,28 @@ symmetry_cancer_fct <- cancer_sample %>%
                                   TRUE ~ "very high")))
 
 head(symmetry_cancer_fct)
+```
 
+```
+## # A tibble: 6 x 33
+##         ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+##      <dbl> <chr>           <dbl>        <dbl>          <dbl>     <dbl>
+## 1   842302 M                18.0         10.4          123.      1001 
+## 2   842517 M                20.6         17.8          133.      1326 
+## 3 84300903 M                19.7         21.2          130       1203 
+## 4 84348301 M                11.4         20.4           77.6      386.
+## 5 84358402 M                20.3         14.3          135.      1297 
+## 6   843786 M                12.4         15.7           82.6      477.
+## # ... with 27 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, ...
+```
+
+```r
 #plot 
 area_symmetry_plot_2 <- ggplot(symmetry_cancer_fct, aes(symmetry_fct, area_mean))+ 
   geom_col(aes(fill = diagnosis), size = 3, alpha = 0.4) +
@@ -185,16 +274,38 @@ area_symmetry_plot_2 <- ggplot(symmetry_cancer_fct, aes(symmetry_fct, area_mean)
   labs(x = "Mean Tumor Symmetry", y = "Mean Tumor Area")
   
 print(area_symmetry_plot_2)
-
-
 ```
+
+![](mini-project-milestone-3_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 The Graph above does not have the mean symmetry in order, but alphabetical, which is not logical in observing this data set, so I will reorder using the forcats package - this will be ordered according to ascending worst  area, because I wanted to try and relate this to my research question  
-```{r}
+
+```r
 reorder_cancer_symmetry <- symmetry_cancer_fct %>%
    mutate(symmetry_fct = fct_reorder(symmetry_fct, area_worst, mean, .desc = FALSE))
 
 head(reorder_cancer_symmetry)
+```
 
+```
+## # A tibble: 6 x 33
+##         ID diagnosis radius_mean texture_mean perimeter_mean area_mean
+##      <dbl> <chr>           <dbl>        <dbl>          <dbl>     <dbl>
+## 1   842302 M                18.0         10.4          123.      1001 
+## 2   842517 M                20.6         17.8          133.      1326 
+## 3 84300903 M                19.7         21.2          130       1203 
+## 4 84348301 M                11.4         20.4           77.6      386.
+## 5 84358402 M                20.3         14.3          135.      1297 
+## 6   843786 M                12.4         15.7           82.6      477.
+## # ... with 27 more variables: smoothness_mean <dbl>, compactness_mean <dbl>,
+## #   concavity_mean <dbl>, concave_points_mean <dbl>, symmetry_mean <dbl>,
+## #   fractal_dimension_mean <dbl>, radius_se <dbl>, texture_se <dbl>,
+## #   perimeter_se <dbl>, area_se <dbl>, smoothness_se <dbl>,
+## #   compactness_se <dbl>, concavity_se <dbl>, concave_points_se <dbl>,
+## #   symmetry_se <dbl>, fractal_dimension_se <dbl>, radius_worst <dbl>,
+## #   texture_worst <dbl>, perimeter_worst <dbl>, area_worst <dbl>, ...
+```
+
+```r
 #plot 
 area_symmetry_plot_3 <- ggplot(reorder_cancer_symmetry, aes(symmetry_fct, area_mean))+ 
   geom_col(aes(fill = diagnosis), size = 3, alpha = 0.4) +
@@ -203,6 +314,8 @@ area_symmetry_plot_3 <- ggplot(reorder_cancer_symmetry, aes(symmetry_fct, area_m
   
 print(area_symmetry_plot_3)
 ```
+
+![](mini-project-milestone-3_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 
 why you chose this ordering: I wanted to stick to the categorical values that I explored earlier, I did not want to deviate too far from the graph I defined at the start of the exercise, so I decided to finish off with looking at symmetry. I picked these specific values for ordering purely for exploratory reasons 
@@ -237,7 +350,8 @@ Fit a model or run a hypothesis test that provides insight on this variable with
 
 <!-------------------------- Start your work below ---------------------------->
 
-```{r}
+
+```r
 #I will see the statistical significance between two means: for the area_worst variable. I will compare the malignant vs benign tumor group 
 
 worst_area_malignant <- cancer_sample %>% 
@@ -249,11 +363,64 @@ worst_area_benign <- cancer_sample %>%
 
 
 print(worst_area_malignant)
-print(worst_area_benign)
+```
 
+```
+## # A tibble: 212 x 1
+##    area_worst
+##         <dbl>
+##  1      2019 
+##  2      1956 
+##  3      1709 
+##  4       568.
+##  5      1575 
+##  6       742.
+##  7      1606 
+##  8       897 
+##  9       739.
+## 10       711.
+## # ... with 202 more rows
+```
+
+```r
+print(worst_area_benign)
+```
+
+```
+## # A tibble: 357 x 1
+##    area_worst
+##         <dbl>
+##  1       711.
+##  2       630.
+##  3       315.
+##  4       546.
+##  5       242.
+##  6       583.
+##  7       699.
+##  8       516.
+##  9       657.
+## 10       527.
+## # ... with 347 more rows
+```
+
+```r
 ttest_worst_area <- t.test(worst_area_malignant, worst_area_benign, alternative = "two.sided", conf.level = 0.95)
 
 print(ttest_worst_area)
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  worst_area_malignant and worst_area_benign
+## t = 20.571, df = 229.91, p-value < 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  780.6890 946.0847
+## sample estimates:
+## mean of x mean of y 
+## 1422.2863  558.8994
 ```
 
 <!----------------------------------------------------------------------------->
@@ -269,13 +436,27 @@ Produce something relevant from your fitted model: either predictions on Y, or a
 <!-------------------------- Start your work below ---------------------------->
 
 When running a t-test, I will need to report the p value if I aim to present this somewhere. For that, I want to tidy the summary statistics from the ttest into something tidy, I will use the broom::tidy() function. This will produce a tibble, from which I will find the p.value column 
-```{r}
+
+```r
 answ2.2 <- broom::tidy(ttest_worst_area)
 print(answ2.2)
+```
 
+```
+## # A tibble: 1 x 10
+##   estimate estimate1 estimate2 statistic  p.value parameter conf.low conf.high
+##      <dbl>     <dbl>     <dbl>     <dbl>    <dbl>     <dbl>    <dbl>     <dbl>
+## 1     863.     1422.      559.      20.6 4.94e-54      230.     781.      946.
+## # ... with 2 more variables: method <chr>, alternative <chr>
+```
+
+```r
 #the p value can be called for like so 
 answ2.2$p.value
+```
 
+```
+## [1] 4.937924e-54
 ```
 
 <!----------------------------------------------------------------------------->
@@ -295,8 +476,16 @@ Take a summary table that you made from Milestone 2 (Exercise 1.2), and write it
   
 <!-------------------------- Start your work below ---------------------------->
 
-```{r}
+
+```r
 here::here()
+```
+
+```
+## [1] "C:/Users/tamil/Desktop/STAT545/mda-tami-kali"
+```
+
+```r
 #"C:/Users/tamil/Desktop/STAT545/mda-tami-kali"
 benign_count <- cancer_sample %>% 
   filter(diagnosis == "B") %>% 
@@ -306,12 +495,24 @@ malignant_count <- cancer_sample %>%
   count() 
 diagnosis_count <- bind_cols(benign_count, malignant_count) %>%
   rename(c("benign" = "n...1","malignant" = "n...2"))
+```
 
+```
+## New names:
+## * n -> n...1
+## * n -> n...2
+```
 
+```r
 write_csv(diagnosis_count, here::here("output", "milestone2_exercise_summary_table.csv"))
 # View files in output folder
 dir(here::here("output"))
+```
 
+```
+## [1] "milestone2_exercise_summary_table.csv"
+## [2] "milestone3_model_object.rds"          
+## [3] "README.md"
 ```
 
 <!----------------------------------------------------------------------------->
@@ -324,10 +525,16 @@ Write your model object from Exercise 2 to an R binary file (an RDS), and load i
 
 <!-------------------------- Start your work below ---------------------------->
 
-```{r}
+
+```r
 saveRDS(ttest_worst_area, here::here("output", "milestone3_model_object.rds"))
 dir(here::here("output"))
+```
 
+```
+## [1] "milestone2_exercise_summary_table.csv"
+## [2] "milestone3_model_object.rds"          
+## [3] "README.md"
 ```
 
 <!----------------------------------------------------------------------------->
